@@ -1,0 +1,22 @@
+{
+  "name": "habitfire-app",
+  "version": "1.0.0",
+  "description": "Premium Android Daily Task & Streak Tracker",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx -y http-server -p 8080 -c-1",
+    "start": "npx -y http-server -p 8080 -c-1"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  },
+  "keywords": [
+    "pwa",
+    "streak",
+    "android",
+    "habits"
+  ],
+  "author": "Antigravity",
+  "license": "MIT"
+}

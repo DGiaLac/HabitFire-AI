@@ -1,0 +1,1339 @@
+/* ==========================================================================
+   HabitFire Modern CSS Stylesheet
+   Designed with Obsidian Dark Mode, HSL Color Palettes, Glassmorphism, & Touch UI
+   ========================================================================== */
+
+:root {
+  /* HSL Color System */
+  --hue-primary: 262;   /* Royal Purple */
+  --hue-accent: 18;     /* Neon Orange/Flame */
+  --hue-success: 156;   /* Emerald Green */
+  --hue-danger: 343;    /* Crimson Red */
+  
+  --color-bg: hsl(265, 30%, 5%);
+  --color-surface-base: hsl(265, 25%, 9%);
+  --color-surface-card: hsla(265, 20%, 14%, 0.65);
+  --color-surface-hover: hsla(265, 20%, 18%, 0.85);
+  
+  --color-primary: hsl(var(--hue-primary), 85%, 65%);
+  --color-primary-glow: hsla(var(--hue-primary), 85%, 65%, 0.25);
+  --color-accent: hsl(var(--hue-accent), 100%, 55%);
+  --color-accent-glow: hsla(var(--hue-accent), 100%, 55%, 0.3);
+  
+  --color-success: hsl(var(--hue-success), 75%, 48%);
+  --color-success-glow: hsla(var(--hue-success), 75%, 48%, 0.2);
+  --color-danger: hsl(var(--hue-danger), 85%, 55%);
+  --color-danger-glow: hsla(var(--hue-danger), 85%, 55%, 0.2);
+  
+  --color-text-primary: hsl(0, 0%, 96%);
+  --color-text-secondary: hsl(265, 10%, 70%);
+  --color-text-muted: hsl(265, 10%, 48%);
+  
+  --border-glass: 1px solid hsla(0, 0%, 100%, 0.08);
+  --border-focus: 1px solid hsla(var(--hue-primary), 85%, 65%, 0.5);
+  
+  --shadow-premium: 0 16px 36px -4px rgba(0, 0, 0, 0.5), 0 8px 16px -4px rgba(0, 0, 0, 0.3);
+  --shadow-neon-flame: 0 0 20px hsla(var(--hue-accent), 100%, 55%, 0.4);
+  
+  --font-family: 'Outfit', sans-serif;
+  --transition-smooth: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  --transition-bounce: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Reset & Scrollbar */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+body {
+  background-color: #0b0714;
+  color: var(--color-text-primary);
+  font-family: var(--font-family);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  overflow: hidden;
+  margin: 0;
+  padding: 20px;
+}
+
+/* Custom Scrollbar for inner components */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* ==========================================================================
+   Android Phone Mockup Chassis (Desktop Only)
+   ========================================================================== */
+.phone-frame {
+  position: relative;
+  width: 390px;
+  height: 800px;
+  background-color: #1a1528;
+  border: 12px solid #2e283f;
+  border-radius: 48px;
+  box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.8), 0 0 0 2px rgba(255, 255, 255, 0.05);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: var(--transition-smooth);
+}
+
+/* Phone Bezel Features */
+.phone-camera-notch {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 110px;
+  height: 24px;
+  background-color: #2e283f;
+  border-radius: 12px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.phone-camera-notch::before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  background: #111;
+  border-radius: 50%;
+  margin-right: 50px;
+}
+
+.phone-speaker {
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50px;
+  height: 4px;
+  background: #444;
+  border-radius: 2px;
+  z-index: 1000;
+}
+
+.phone-home-indicator {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 4px;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 2px;
+  z-index: 999;
+}
+
+/* Phone Screen Container */
+.phone-screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: var(--color-bg);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ==========================================================================
+   Android Status Bar
+   ========================================================================== */
+.status-bar {
+  height: 46px;
+  padding: 18px 20px 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  z-index: 998;
+  background: linear-gradient(to bottom, rgba(11, 7, 20, 0.8), transparent);
+  user-select: none;
+  cursor: pointer; /* Click to pull down notifications */
+}
+
+.status-bar-left, .status-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.status-time {
+  letter-spacing: -0.2px;
+}
+
+.status-icon {
+  width: 15px;
+  height: 15px;
+  opacity: 0.8;
+}
+
+.battery-icon {
+  transform: rotate(90deg);
+  margin-left: -3px;
+}
+
+.status-notification-icons {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--color-accent);
+}
+
+.status-notification-icon {
+  font-size: 11px;
+  animation: bounceMini 1s infinite alternate;
+}
+
+/* ==========================================================================
+   Android Notification Drawer (Slide down drawer)
+   ========================================================================== */
+.notification-drawer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: calc(100% - 64px); /* Slides down to cover everything above bottom navigation */
+  background: rgba(11, 7, 20, 0.95);
+  backdrop-filter: blur(16px);
+  z-index: 1001;
+  border-bottom: 2px solid rgba(138, 43, 226, 0.3);
+  border-bottom-left-radius: 24px;
+  border-bottom-right-radius: 24px;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 20px 40px 20px;
+  transform: translateY(-100%);
+  transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.notification-drawer.open {
+  transform: translateY(0);
+}
+
+.drawer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 10px;
+}
+.drawer-header span {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+.clear-all-btn {
+  background: transparent;
+  border: none;
+  color: var(--color-primary);
+  font-family: var(--font-family);
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.drawer-body {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.empty-drawer-msg {
+  text-align: center;
+  color: var(--color-text-muted);
+  margin-top: 50%;
+  font-size: 15px;
+}
+
+/* Notification Card inside Drawer */
+.notification-card {
+  background: var(--color-surface-card);
+  border: var(--border-glass);
+  border-left: 4px solid var(--color-accent);
+  border-radius: 12px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  animation: slideInLeft 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.notification-card-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--color-accent);
+  font-weight: 600;
+}
+.notification-card-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+.notification-card-desc {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  line-height: 1.4;
+}
+
+.drawer-handle {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+.handle-bar {
+  width: 40px;
+  height: 4px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+}
+
+/* ==========================================================================
+   Application Main Shell
+   ========================================================================== */
+.app-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+/* App Header */
+.app-header {
+  height: 60px;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 990;
+  border-bottom: var(--border-glass);
+  background: var(--color-surface-base);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.brand-emoji {
+  font-size: 22px;
+  animation: firePulse 1.5s infinite alternate;
+}
+.brand-text {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  background: linear-gradient(135deg, var(--color-text-primary) 30%, var(--color-accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Mini Streak Badge in Header */
+.streak-badge-mini {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: linear-gradient(135deg, hsla(var(--hue-accent), 100%, 55%, 0.15) 0%, hsla(var(--hue-primary), 85%, 65%, 0.15) 100%);
+  border: 1px solid hsla(var(--hue-accent), 100%, 55%, 0.3);
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-accent);
+  box-shadow: 0 0 10px rgba(255, 69, 0, 0.1);
+  transition: var(--transition-bounce);
+  cursor: pointer;
+}
+.streak-badge-mini:hover {
+  transform: scale(1.05);
+}
+.streak-icon-mini {
+  width: 16px;
+  height: 16px;
+  filter: drop-shadow(0 0 2px var(--color-accent));
+}
+
+/* App Screens Container */
+.app-screens {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  background: var(--color-bg);
+}
+
+/* Individual Pages/Screens */
+.app-screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.97);
+  transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), opacity 0.4s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-screen.active {
+  opacity: 1;
+  pointer-events: auto;
+  transform: scale(1);
+  z-index: 10;
+}
+
+.screen-scrollable {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 20px 80px 20px;
+}
+.screen-scrollable.pad-bottom {
+  padding-bottom: 100px;
+}
+
+.screen-header {
+  margin-bottom: 24px;
+}
+.screen-header h2 {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+.screen-header p {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  margin-top: 4px;
+}
+
+/* ==========================================================================
+   TODAY SCREEN COMPONENTS
+   ========================================================================== */
+.today-hero {
+  background: linear-gradient(135deg, rgba(22, 17, 34, 0.8) 0%, rgba(35, 20, 50, 0.6) 100%);
+  border: var(--border-glass);
+  border-radius: 24px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-premium);
+}
+.today-hero::before {
+  content: '';
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 120px;
+  height: 120px;
+  background: var(--color-primary-glow);
+  filter: blur(40px);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.hero-date-group {
+  flex: 1;
+}
+.today-title {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+.today-subtitle {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  margin-top: 2px;
+}
+
+/* Circular Progress */
+.progress-container {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+.today-hero .progress-container {
+  width: auto;
+  flex-direction: row;
+}
+
+.progress-circle-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 70px;
+  height: 70px;
+}
+.progress-ring {
+  transform: rotate(-90deg);
+}
+.progress-ring-circle {
+  transition: stroke-dashoffset 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  stroke-dasharray: 175.93; /* 2 * PI * 28 */
+  stroke-dashoffset: 175.93;
+}
+.progress-percent {
+  position: absolute;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.progress-stats {
+  display: flex;
+  flex-direction: column;
+}
+.progress-fraction {
+  font-size: 16px;
+  font-weight: 700;
+}
+.progress-status-label {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  margin-top: 1px;
+}
+
+/* Section Header for Tasks */
+.section-title-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+.section-title-bar h2 {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--color-text-secondary);
+}
+.task-count-badge {
+  background: rgba(255, 255, 255, 0.08);
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+/* Task List */
+.task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Task Card Component */
+.task-card {
+  background: var(--color-surface-card);
+  border: var(--border-glass);
+  border-radius: 16px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  transition: var(--transition-bounce);
+  animation: cardFadeIn 0.3s ease-out;
+}
+
+.task-card:hover {
+  transform: translateY(-2px);
+  background: var(--color-surface-hover);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.task-card-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+/* Premium Checkbox Button style */
+.checkbox-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 8px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: transparent;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+.checkbox-btn:hover {
+  border-color: var(--color-primary);
+  background: rgba(138, 43, 226, 0.1);
+}
+
+.task-card.completed .checkbox-btn {
+  background: var(--color-success);
+  border-color: var(--color-success);
+  color: white;
+}
+
+.checkbox-icon {
+  width: 14px;
+  height: 14px;
+}
+
+.task-text {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  transition: var(--transition-smooth);
+  word-break: break-word;
+}
+
+.task-card.completed .task-text {
+  color: var(--color-text-muted);
+  text-decoration: line-through;
+}
+
+/* Delete Task Button */
+.btn-delete-task {
+  background: transparent;
+  border: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 8px;
+  opacity: 0;
+  transition: var(--transition-smooth);
+}
+
+.task-card:hover .btn-delete-task {
+  opacity: 1;
+}
+
+.btn-delete-task:hover {
+  color: var(--color-danger);
+  background: var(--color-danger-glow);
+}
+
+.btn-delete-icon {
+  width: 18px;
+  height: 18px;
+}
+
+/* Empty State Styling */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 40px 20px;
+  background: rgba(22, 17, 34, 0.4);
+  border: var(--border-glass);
+  border-radius: 24px;
+  margin-top: 10px;
+}
+.empty-illustration {
+  font-size: 40px;
+  margin-bottom: 12px;
+  animation: floatIllustration 2s infinite ease-in-out;
+}
+.empty-state h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.empty-state p {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  max-width: 250px;
+  line-height: 1.5;
+}
+
+/* Floating Task Creation Bar at Bottom */
+.add-task-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 14px 20px 20px 20px;
+  background: linear-gradient(to top, var(--color-bg) 70%, transparent);
+  z-index: 100;
+}
+.add-task-form {
+  display: flex;
+  background: var(--color-surface-card);
+  border: var(--border-glass);
+  padding: 6px 6px 6px 16px;
+  border-radius: 20px;
+  align-items: center;
+  gap: 10px;
+  box-shadow: var(--shadow-premium);
+  transition: var(--transition-bounce);
+}
+.add-task-form:focus-within {
+  border-color: var(--color-primary);
+  box-shadow: 0 8px 24px rgba(138, 43, 226, 0.2);
+}
+.add-task-form input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: var(--font-family);
+  font-size: 15px;
+  color: var(--color-text-primary);
+  font-weight: 500;
+}
+.add-task-form input::placeholder {
+  color: var(--color-text-muted);
+}
+.btn-add-task {
+  width: 38px;
+  height: 38px;
+  border-radius: 14px;
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition-bounce);
+}
+.btn-add-task:hover {
+  transform: scale(1.05) rotate(90deg);
+  background: hsl(var(--hue-primary), 90%, 70%);
+}
+.btn-icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* ==========================================================================
+   HISTORY SCREEN COMPONENTS
+   ========================================================================== */
+.week-calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  margin-bottom: 24px;
+}
+
+/* Calendar Day Button */
+.calendar-day-btn {
+  background: var(--color-surface-card);
+  border: var(--border-glass);
+  border-radius: 14px;
+  padding: 10px 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: var(--transition-bounce);
+}
+.calendar-day-btn:hover {
+  transform: translateY(-2px);
+  background: var(--color-surface-hover);
+}
+.calendar-day-btn.selected {
+  background: linear-gradient(135deg, rgba(138, 43, 226, 0.2) 0%, rgba(217, 70, 239, 0.2) 100%);
+  border-color: var(--color-primary);
+}
+
+.day-name {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+
+.day-number {
+  font-size: 15px;
+  font-weight: 800;
+}
+
+/* Ring Completion Dot inside Calendar Button */
+.day-status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--color-text-muted);
+}
+.day-status-indicator.success {
+  background-color: var(--color-success);
+  box-shadow: 0 0 6px var(--color-success);
+}
+.day-status-indicator.miss {
+  background-color: var(--color-danger);
+  box-shadow: 0 0 6px var(--color-danger);
+}
+.day-status-indicator.none {
+  background-color: transparent;
+  border: 1px solid var(--color-text-muted);
+}
+
+.history-content {
+  background: var(--color-surface-card);
+  border: var(--border-glass);
+  border-radius: 24px;
+  padding: 20px;
+  box-shadow: var(--shadow-premium);
+}
+
+.selected-day-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: 12px;
+}
+.selected-day-header h3 {
+  font-size: 17px;
+  font-weight: 800;
+}
+.completion-pill {
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  background: var(--color-primary-glow);
+  color: var(--color-primary);
+}
+.completion-pill.success {
+  background: var(--color-success-glow);
+  color: var(--color-success);
+}
+.completion-pill.miss {
+  background: var(--color-danger-glow);
+  color: var(--color-danger);
+}
+
+/* ==========================================================================
+   ANALYTICS & STREAKS DASHBOARD
+   ========================================================================== */
+.streak-hero-card {
+  background: radial-gradient(circle at top, var(--flame-glow-bg, rgba(255, 69, 0, 0.15)) 0%, rgba(22, 17, 34, 0.7) 100%);
+  border: var(--border-glass);
+  border-radius: 28px;
+  padding: 24px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: var(--shadow-premium);
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+  transition: var(--transition-smooth);
+}
+
+.streak-hero-card::after {
+  content: '';
+  position: absolute;
+  bottom: -40px;
+  width: 80%;
+  height: 60px;
+  background: var(--flame-glow-bg, var(--color-accent-glow));
+  filter: blur(30px);
+  border-radius: 50%;
+  transition: var(--transition-smooth);
+}
+
+.streak-flame-container {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+.streak-flame-svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 0 12px var(--flame-glow, rgba(255, 69, 0, 0.35)));
+  transition: var(--transition-smooth);
+}
+
+.streak-flame-number {
+  position: absolute;
+  top: 55%;
+  left: 50%;
+  transform: translate(-50%, -55%);
+  font-size: 38px;
+  font-weight: 900;
+  color: white;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8), 0 0 15px var(--flame-glow, rgba(255, 69, 0, 0.3));
+  transition: var(--transition-smooth);
+}
+
+.flame-layer {
+  transform-origin: 50px 110px;
+}
+
+.flame-back {
+  animation: flicker 1.5s infinite alternate ease-in-out;
+}
+.flame-mid {
+  animation: flicker 1.2s infinite alternate-reverse ease-in-out;
+}
+.flame-front {
+  animation: flicker 1.8s infinite alternate ease-in-out;
+}
+
+.streak-status-title {
+  font-size: 20px;
+  font-weight: 800;
+  margin-bottom: 4px;
+  color: var(--flame-title-color, var(--color-accent));
+  transition: var(--transition-smooth);
+}
+.streak-status-desc {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  max-width: 220px;
+  line-height: 1.4;
+}
+
+/* Stats grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background: var(--color-surface-card);
+  border: var(--border-glass);
+  border-radius: 20px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.stat-icon-wrapper {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2px;
+}
+.stat-icon-wrapper svg {
+  width: 18px;
+  height: 18px;
+}
+
+.stat-icon-wrapper.purple {
+  background: rgba(138, 43, 226, 0.15);
+  color: var(--color-primary);
+}
+.stat-icon-wrapper.orange {
+  background: rgba(255, 69, 0, 0.15);
+  color: var(--color-accent);
+}
+.stat-icon-wrapper.blue {
+  background: rgba(0, 191, 255, 0.15);
+  color: #00bfff;
+}
+.stat-icon-wrapper.red {
+  background: rgba(244, 63, 94, 0.15);
+  color: var(--color-danger);
+}
+
+.stat-val {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--color-text-primary);
+}
+.stat-lbl {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+/* Quote card */
+.quote-card {
+  background: rgba(22, 17, 34, 0.4);
+  border: var(--border-glass);
+  border-radius: 20px;
+  padding: 18px 20px;
+  text-align: center;
+  position: relative;
+}
+.quote-symbol {
+  font-size: 40px;
+  font-family: serif;
+  color: var(--color-primary);
+  line-height: 0.1;
+  position: absolute;
+  top: 15px;
+  left: 20px;
+  opacity: 0.3;
+}
+.quote-text {
+  font-size: 13px;
+  font-style: italic;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+  margin-bottom: 6px;
+}
+.quote-author {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--color-primary);
+}
+
+/* ==========================================================================
+   SETTINGS SCREEN
+   ========================================================================== */
+.settings-group {
+  margin-bottom: 24px;
+}
+
+.settings-group-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  letter-spacing: 0.8px;
+  margin-bottom: 10px;
+  padding-left: 4px;
+}
+
+.setting-item {
+  background: var(--color-surface-card);
+  border: var(--border-glass);
+  border-radius: 16px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.setting-label-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.setting-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+.setting-desc {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.setting-input {
+  background: rgba(255, 255, 255, 0.05);
+  border: var(--border-glass);
+  border-radius: 10px;
+  padding: 8px 12px;
+  color: var(--color-text-primary);
+  font-family: var(--font-family);
+  font-size: 14px;
+  font-weight: 500;
+  width: 130px;
+  text-align: right;
+  outline: none;
+  transition: var(--transition-smooth);
+}
+.setting-input:focus {
+  border-color: var(--color-primary);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.setting-time-input {
+  background: rgba(255, 255, 255, 0.05);
+  border: var(--border-glass);
+  border-radius: 10px;
+  padding: 8px 10px;
+  color: var(--color-text-primary);
+  font-family: var(--font-family);
+  font-size: 14px;
+  font-weight: 600;
+  width: 100px;
+  text-align: center;
+  outline: none;
+  cursor: pointer;
+}
+
+/* Custom Settings Buttons */
+.setting-item-button {
+  background: var(--color-surface-card);
+  border: var(--border-glass);
+  border-radius: 16px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.btn-settings-action {
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-family: var(--font-family);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition-bounce);
+  white-space: nowrap;
+}
+.btn-settings-action:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.1);
+}
+.btn-settings-action.secondary {
+  background: rgba(255, 255, 255, 0.08);
+  border: var(--border-glass);
+  color: var(--color-text-primary);
+}
+.btn-settings-action.secondary:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+.btn-settings-action.danger {
+  background: var(--color-danger);
+}
+
+/* Notification Switch style */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+}
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.15);
+  transition: .4s;
+  border-radius: 24px;
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+input:checked + .slider {
+  background-color: var(--color-success);
+}
+input:focus + .slider {
+  box-shadow: 0 0 1px var(--color-success);
+}
+input:checked + .slider:before {
+  transform: translateX(20px);
+}
+
+.app-version-footer {
+  text-align: center;
+  margin-top: 40px;
+  padding-bottom: 20px;
+}
+.app-version-footer p:first-child {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-text-muted);
+}
+.app-version-footer p:last-child {
+  font-size: 10px;
+  color: var(--color-text-muted);
+  margin-top: 4px;
+  line-height: 1.4;
+  max-width: 200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ==========================================================================
+   Bottom Navigation Bar
+   ========================================================================== */
+.bottom-nav {
+  height: 64px;
+  background: var(--color-surface-base);
+  border-top: var(--border-glass);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  z-index: 990;
+  padding-bottom: 4px; /* Space for phone gesture pill */
+}
+
+.nav-item {
+  background: transparent;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: var(--transition-bounce);
+  font-family: var(--font-family);
+  padding: 4px 0;
+}
+
+.nav-icon {
+  width: 22px;
+  height: 22px;
+  opacity: 0.7;
+  transition: var(--transition-smooth);
+}
+
+.nav-label {
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.nav-item.active {
+  color: var(--color-primary);
+}
+.nav-item.active .nav-icon {
+  opacity: 1;
+  transform: scale(1.15);
+  filter: drop-shadow(0 0 6px var(--color-primary-glow));
+}
+
+/* ==========================================================================
+   KEYFRAME ANIMATIONS
+   ========================================================================== */
+@keyframes firePulse {
+  0% { transform: scale(1); filter: drop-shadow(0 0 2px rgba(255, 69, 0, 0.4)); }
+  100% { transform: scale(1.1); filter: drop-shadow(0 0 8px rgba(255, 69, 0, 0.8)); }
+}
+
+@keyframes flicker {
+  0% { transform: rotate(-1deg) scale(0.97); }
+  50% { transform: rotate(1deg) scale(1.02); }
+  100% { transform: rotate(-0.5deg) scale(0.99); }
+}
+
+@keyframes floatIllustration {
+  0% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(3deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
+}
+
+@keyframes cardFadeIn {
+  from { opacity: 0; transform: translateY(12px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes bounceMini {
+  from { transform: translateY(0); }
+  to { transform: translateY(-2px); }
+}
+
+/* ==========================================================================
+   Responsive Design Logic
+   If screen size matches a typical mobile display size, hide the PC phone frame,
+   letting the app fill the screen edge-to-edge natively like a native app.
+   ========================================================================== */
+@media screen and (max-width: 600px) {
+  body {
+    padding: 0;
+    background-color: var(--color-bg);
+  }
+  
+  .phone-frame {
+    width: 100vw;
+    height: 100vh;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  
+  .phone-camera-notch,
+  .phone-speaker,
+  .phone-home-indicator {
+    display: none;
+  }
+  
+  .status-bar {
+    height: 48px;
+    padding-top: 14px;
+    background-color: var(--color-surface-base);
+  }
+  
+  .notification-drawer {
+    height: calc(100% - 64px - env(safe-area-inset-bottom, 12px));
+  }
+  
+  .bottom-nav {
+    padding-bottom: env(safe-area-inset-bottom, 12px);
+    height: calc(64px + env(safe-area-inset-bottom, 12px));
+  }
+}
