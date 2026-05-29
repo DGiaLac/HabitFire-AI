@@ -4,21 +4,21 @@
    ========================================================================== */
 
 :root {
-  /* HSL Color System */
-  --hue-primary: 262;   /* Royal Purple */
-  --hue-accent: 18;     /* Neon Orange/Flame */
+  /* HSL Color System - Ocean Blue & Cyan Cyberpunk Automobile */
+  --hue-primary: 200;   /* Light Ocean Blue / Cyan */
+  --hue-accent: 175;    /* Vibrant Neon Turquoise / Mint */
   --hue-success: 156;   /* Emerald Green */
   --hue-danger: 343;    /* Crimson Red */
   
-  --color-bg: hsl(265, 30%, 5%);
-  --color-surface-base: hsl(265, 25%, 9%);
-  --color-surface-card: hsla(265, 20%, 14%, 0.65);
-  --color-surface-hover: hsla(265, 20%, 18%, 0.85);
+  --color-bg: hsl(205, 35%, 6%);
+  --color-surface-base: hsl(205, 30%, 9%);
+  --color-surface-card: hsla(205, 25%, 13%, 0.7);
+  --color-surface-hover: hsla(205, 25%, 17%, 0.85);
   
-  --color-primary: hsl(var(--hue-primary), 85%, 65%);
-  --color-primary-glow: hsla(var(--hue-primary), 85%, 65%, 0.25);
-  --color-accent: hsl(var(--hue-accent), 100%, 55%);
-  --color-accent-glow: hsla(var(--hue-accent), 100%, 55%, 0.3);
+  --color-primary: hsl(var(--hue-primary), 95%, 60%);
+  --color-primary-glow: hsla(var(--hue-primary), 95%, 60%, 0.25);
+  --color-accent: hsl(var(--hue-accent), 100%, 48%);
+  --color-accent-glow: hsla(var(--hue-accent), 100%, 48%, 0.3);
   
   --color-success: hsl(var(--hue-success), 75%, 48%);
   --color-success-glow: hsla(var(--hue-success), 75%, 48%, 0.2);
@@ -26,14 +26,14 @@
   --color-danger-glow: hsla(var(--hue-danger), 85%, 55%, 0.2);
   
   --color-text-primary: hsl(0, 0%, 96%);
-  --color-text-secondary: hsl(265, 10%, 70%);
-  --color-text-muted: hsl(265, 10%, 48%);
+  --color-text-secondary: hsl(205, 15%, 72%);
+  --color-text-muted: hsl(205, 12%, 50%);
   
-  --border-glass: 1px solid hsla(0, 0%, 100%, 0.08);
-  --border-focus: 1px solid hsla(var(--hue-primary), 85%, 65%, 0.5);
+  --border-glass: 1px solid hsla(200, 100%, 90%, 0.08);
+  --border-focus: 1px solid hsla(var(--hue-primary), 95%, 60%, 0.5);
   
-  --shadow-premium: 0 16px 36px -4px rgba(0, 0, 0, 0.5), 0 8px 16px -4px rgba(0, 0, 0, 0.3);
-  --shadow-neon-flame: 0 0 20px hsla(var(--hue-accent), 100%, 55%, 0.4);
+  --shadow-premium: 0 16px 36px -4px rgba(0, 0, 0, 0.6), 0 8px 16px -4px rgba(0, 0, 0, 0.4);
+  --shadow-neon-flame: 0 0 25px hsla(var(--hue-primary), 95%, 60%, 0.4);
   
   --font-family: 'Outfit', sans-serif;
   --transition-smooth: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
@@ -50,7 +50,7 @@
 }
 
 body {
-  background-color: #0b0714;
+  background: linear-gradient(135deg, rgba(8, 15, 30, 0.94), rgba(4, 8, 16, 0.97)), url('supercar_bg.png') center/cover no-repeat;
   color: var(--color-text-primary);
   font-family: var(--font-family);
   display: flex;
@@ -148,7 +148,7 @@ body {
   position: relative;
   width: 100%;
   height: 100%;
-  background: var(--color-bg);
+  background: linear-gradient(180deg, rgba(8, 15, 30, 0.94) 0%, rgba(4, 8, 16, 0.98) 100%), url('supercar_bg.png') center/cover no-repeat;
   display: flex;
   flex-direction: column;
   overflow: hidden;
