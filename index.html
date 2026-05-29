@@ -55,14 +55,17 @@
       <div class="app-container">
         
         <!-- App Header -->
-        <header class="app-header">
-          <div class="brand">
-            <span class="brand-emoji">🔥</span>
-            <span class="brand-text">HabitFire</span>
+        <header class="app-header" style="height: 64px; border-bottom: var(--border-glass); background: rgba(8,15,30,0.85); backdrop-filter: blur(12px); display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; z-index: 990;">
+          <div class="brand" style="display: flex; align-items: center; gap: 8px;">
+            <div class="header-profile-avatar" id="headerProfileAvatar" style="display: none; width: 30px; height: 30px; border-radius: 50%; overflow: hidden; border: 2px solid var(--color-primary); box-shadow: 0 0 8px var(--color-primary-glow); cursor: pointer;" title="Google Account Status">
+              <img id="headerProfilePic" src="" alt="Google Profile Pic" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+            <span class="brand-emoji" id="headerBrandEmoji">🔥</span>
+            <span class="brand-text" style="font-weight: 800; font-size: 19px; letter-spacing: 0.5px; background: linear-gradient(90deg, var(--color-text-primary) 30%, var(--color-primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">HabitFire</span>
           </div>
           <div class="header-actions">
             <div class="streak-badge-mini" id="headerStreakBadge" title="Current streak">
-              <svg viewBox="0 0 24 24" class="streak-icon-mini"><path fill="currentColor" d="M17.66 11.57c-.77-.77-1.9-1.28-3.06-1.57-.46-.12-.92-.23-1.39-.33.37-.58.82-1.12 1.34-1.61.64-.62.83-1.56.46-2.38-.37-.82-1.25-1.3-2.15-1.14-1.07.2-2.1.72-2.95 1.5C8.36 7.54 7 9.87 7 12.3c0 2.76 2.24 5 5 5s5-2.24 5-5c0-.98-.36-1.89-.98-2.58-.23.47-.63.88-1.02 1.27-.39.39-.77.78-1.15 1.16-.77.77-2.03.77-2.8 0a1.99 1.99 0 0 1 0-2.82l3.66-3.66c.15-.15.35-.23.56-.23.21 0 .41.08.56.23l2.83 2.83c.39.39.39 1.02 0 1.41z"/></svg>
+              <span class="streak-emoji-mini">🧊</span>
               <span id="headerStreakValue">0</span>
             </div>
           </div>
@@ -86,8 +89,8 @@
                       <circle class="progress-ring-circle" id="todayProgressRing" stroke="url(#progressGradient)" stroke-width="6" stroke-linecap="round" fill="transparent" r="28" cx="35" cy="35"/>
                       <defs>
                         <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                          <stop offset="0%" stop-color="#8a2be2" />
-                          <stop offset="100%" stop-color="#ff4500" />
+                          <stop offset="0%" stop-color="var(--color-primary)" />
+                          <stop offset="100%" stop-color="var(--color-accent)" />
                         </linearGradient>
                       </defs>
                     </svg>
@@ -96,6 +99,25 @@
                   <div class="progress-stats">
                     <span class="progress-fraction" id="todayProgressFraction">0 / 0 Done</span>
                     <span class="progress-status-label" id="todayProgressLabel">No tasks added yet</span>
+                  </div>
+                </div>
+
+                <!-- Horizontal Car Speedometer Track -->
+                <div class="speed-track-container" style="margin-top: 18px; width: 100%;">
+                  <div class="speed-track-labels" style="display: flex; justify-content: space-between; font-size: 11px; color: var(--color-text-muted); font-weight: 700; margin-bottom: 6px;">
+                    <span>0 km/h</span>
+                    <span id="speedometerLabel" style="color: var(--color-primary); letter-spacing: 0.5px; font-weight: 800; text-shadow: 0 0 8px var(--color-primary-glow);">PARKED</span>
+                    <span>100% BOOST</span>
+                  </div>
+                  <div class="speed-track" style="position: relative; height: 8px; background: rgba(255, 255, 255, 0.08); border-radius: 4px; overflow: visible; box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);">
+                    <!-- Neon fill progress -->
+                    <div class="speed-track-fill" id="speedTrackFill" style="height: 100%; width: 0%; background: linear-gradient(90deg, var(--color-primary), var(--color-accent)); border-radius: 4px; transition: var(--transition-smooth); box-shadow: 0 0 10px var(--color-primary-glow);"></div>
+                    <!-- Sports Car Icon -->
+                    <div class="speed-track-car" id="speedTrackCar" style="position: absolute; top: -10px; left: 0%; transform: translateX(-50%); width: 28px; height: 28px; color: var(--color-primary); filter: drop-shadow(0 0 6px var(--color-primary-glow)); transition: left 0.4s cubic-bezier(0.25, 0.8, 0.25, 1.15);">
+                      <svg viewBox="0 0 24 24" style="width: 100%; height: 100%;">
+                        <path fill="currentColor" d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/>
+                      </svg>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -249,6 +271,37 @@
                 <p>Customize HabitFire to fit your schedule</p>
               </div>
 
+              <!-- Google Account Profile Panel -->
+              <div class="settings-group" id="settingsGoogleGroup" style="margin-bottom: 24px;">
+                <div class="settings-group-title">Google Account</div>
+                
+                <!-- If not signed in -->
+                <div class="setting-item-button" id="settingsSignedOutView" style="display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; background: var(--color-surface-card); border-radius: 16px; border: var(--border-glass);">
+                  <div class="setting-label-group">
+                    <span class="setting-title" style="font-weight: 700; font-size: 14px;">Connect Google Account</span>
+                    <span class="setting-desc" style="font-size: 12px; color: var(--color-text-muted);">Sync tasks & unlock avatar dashboard</span>
+                  </div>
+                  <button type="button" class="btn-settings-action" id="btnSettingsGoogleLogin" style="background: #ffffff; color: #1c1921; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 700; border: none; box-shadow: 0 4px 12px rgba(255,255,255,0.06); padding: 8px 14px; font-size: 13px; border-radius: 20px; cursor: pointer;">
+                    <svg viewBox="0 0 24 24" style="width: 16px; height: 16px;"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
+                    Sign In
+                  </button>
+                </div>
+
+                <!-- If signed in -->
+                <div class="setting-profile-card" id="settingsSignedInView" style="display: none; justify-content: space-between; align-items: center; padding: 14px 18px; background: rgba(0, 242, 254, 0.05); border: 1px solid rgba(0, 242, 254, 0.15); border-radius: 16px;">
+                  <div class="setting-profile-left" style="display: flex; align-items: center; gap: 12px;">
+                    <img id="settingsProfilePic" class="profile-card-pic" src="" alt="Google Profile Pic" style="width: 42px; height: 42px; border-radius: 50%; border: 2px solid var(--color-primary);">
+                    <div class="profile-card-info" style="display: flex; flex-direction: column; gap: 2px;">
+                      <span class="profile-card-name" id="settingsProfileName" style="font-weight: 800; font-size: 15px; color: var(--color-text-primary);">Achiever</span>
+                      <span class="profile-card-email" id="settingsProfileEmail" style="font-size: 11px; color: var(--color-text-muted);">achiever@gmail.com</span>
+                    </div>
+                  </div>
+                  <button type="button" class="btn-settings-action danger" id="btnGoogleSignOut" style="padding: 6px 12px; font-size: 12px; border-radius: 12px; min-height: unset; margin: 0; cursor: pointer;">
+                    Sign Out
+                  </button>
+                </div>
+              </div>
+
               <div class="settings-group">
                 <div class="settings-group-title">Profile Settings</div>
                 <div class="setting-item">
@@ -308,6 +361,31 @@
               </div>
 
               <div class="settings-group">
+                <div class="settings-group-title">Data Backup & Restore</div>
+                
+                <div class="setting-item-button">
+                  <div class="setting-label-group">
+                    <span class="setting-title">Export Progress</span>
+                    <span class="setting-desc">Download a backup file of your tasks and streaks</span>
+                  </div>
+                  <button type="button" class="btn-settings-action" id="btnExportData">
+                    <span class="btn-text">Export</span>
+                  </button>
+                </div>
+
+                <div class="setting-item-button">
+                  <div class="setting-label-group">
+                    <span class="setting-title">Import Progress</span>
+                    <span class="setting-desc">Restore your progress from a previous backup file</span>
+                  </div>
+                  <button type="button" class="btn-settings-action secondary" id="btnImportData">
+                    <span class="btn-text">Import</span>
+                  </button>
+                  <input type="file" id="importFileSelector" style="display: none;" accept=".json">
+                </div>
+              </div>
+
+              <div class="settings-group">
                 <div class="settings-group-title">Danger Zone</div>
                 <div class="setting-item-button">
                   <div class="setting-label-group">
@@ -356,6 +434,74 @@
     
     <!-- Home indicator line -->
     <div class="phone-home-indicator"></div>
+  </div>
+
+  <!-- Welcome Splash Modal (Glows & supercar theme) -->
+  <div class="welcome-overlay" id="welcomeModal" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 8, 16, 0.95); backdrop-filter: blur(20px); z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px; transition: all 0.5s ease-in-out;">
+    <div class="welcome-card" style="width: 100%; max-width: 330px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 18px;">
+      <div class="welcome-telemetry" style="display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); padding: 4px 10px; border-radius: 12px;">
+        <span class="telemetry-bar" style="width: 6px; height: 6px; border-radius: 50%; background: var(--color-primary); box-shadow: 0 0 6px var(--color-primary);"></span>
+        <span class="telemetry-text" style="font-size: 9px; font-weight: 800; letter-spacing: 1px; color: var(--color-primary);">SYSTEM INITIATION</span>
+      </div>
+      <div class="welcome-logo" style="font-size: 42px; text-shadow: 0 0 16px var(--color-primary-glow); animation: pulse 2s infinite alternate;">🔥</div>
+      <h2 class="welcome-title" style="font-size: 26px; font-weight: 900; letter-spacing: 0.5px; background: linear-gradient(90deg, #ffffff, var(--color-primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">HabitFire</h2>
+      <p class="welcome-subtitle" style="font-size: 13px; color: var(--color-text-secondary); line-height: 1.5;">Ignite your daily consistency and navigate habits in high-performance style.</p>
+      
+      <!-- Supercar Silhouette Vector graphic -->
+      <div class="welcome-supercar-silhouette" style="width: 100%; height: 60px; display: flex; justify-content: center; align-items: center; margin: 5px 0;">
+        <svg viewBox="0 0 100 30" style="width: 100%; max-width: 220px; filter: drop-shadow(0 0 8px var(--color-primary-glow));">
+          <!-- Sleek Racing Car outline -->
+          <path fill="none" stroke="var(--color-primary)" stroke-width="1" stroke-linecap="round" d="M10,25 C15,25 18,24 22,21 C26,18 32,8 50,8 C68,8 74,18 78,21 C82,24 85,25 90,25 L92,25" />
+          <circle cx="28" cy="24" r="3.5" fill="#080f1e" stroke="var(--color-accent)" stroke-width="1"/>
+          <circle cx="72" cy="24" r="3.5" fill="#080f1e" stroke="var(--color-accent)" stroke-width="1"/>
+          <line x1="8" y1="25" x2="92" y2="25" stroke="rgba(255,255,255,0.1)" stroke-width="0.8"/>
+        </svg>
+      </div>
+
+      <div class="welcome-actions" style="width: 100%; display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
+        <button type="button" class="btn-welcome-google" id="btnWelcomeGoogleLogin" style="width: 100%; background: #ffffff; color: #1c1921; display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: 700; border: none; box-shadow: 0 4px 16px rgba(255,255,255,0.08); padding: 12px; font-size: 14px; border-radius: 24px; cursor: pointer; transition: var(--transition-smooth);">
+          <svg viewBox="0 0 24 24" style="width: 18px; height: 18px;"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
+          Sign In with Google
+        </button>
+        <button type="button" class="btn-welcome-guest" id="btnWelcomeGuest" style="width: 100%; background: transparent; color: var(--color-text-secondary); border: 1px solid rgba(255,255,255,0.08); padding: 11px; font-size: 13px; font-weight: 600; border-radius: 24px; cursor: pointer; transition: var(--transition-smooth);">
+          Continue as Guest
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Simulated Google Login Account Chooser Dialog -->
+  <div class="google-popup-overlay" id="googlePopupModal" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(4px); z-index: 20000; display: none; align-items: center; justify-content: center; padding: 20px;">
+    <div class="google-popup-card" style="width: 100%; max-width: 320px; background: #ffffff; color: #1f1f1f; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); display: flex; flex-direction: column; overflow: hidden; font-family: 'Outfit', sans-serif;">
+      
+      <!-- Header -->
+      <div class="google-popup-header" style="padding: 24px 20px 14px 20px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 8px;">
+        <svg viewBox="0 0 24 24" style="width: 24px; height: 24px;"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
+        <h3 style="font-size: 18px; font-weight: 700; margin: 0; color: #1f1f1f;">Sign In with Google</h3>
+        <p style="font-size: 12px; color: #5f6368; margin: 0;">to continue to <strong>HabitFire-AI</strong></p>
+      </div>
+
+      <!-- Accounts list -->
+      <div class="google-accounts-list" id="googleAccountsList" style="display: flex; flex-direction: column; border-top: 1px solid #e0e0e0; border-bottom: 1px solid #e0e0e0; max-height: 220px; overflow-y: auto;">
+        <!-- Javascript will inject list -->
+      </div>
+
+      <!-- Custom Account Form (Hidden by default) -->
+      <div class="google-custom-account-form" id="googleCustomAccountForm" style="display: none; flex-direction: column; gap: 10px; padding: 18px 20px; border-bottom: 1px solid #e0e0e0;">
+        <h4 style="font-size: 13px; font-weight: 700; margin: 0; color: #1c1921;">Enter Your Google Account</h4>
+        <input type="text" id="googleCustomName" placeholder="Full Name" style="width: 100%; padding: 8px 12px; border: 1px solid #dadce0; border-radius: 6px; font-size: 13px; outline: none;" autocomplete="off">
+        <input type="email" id="googleCustomEmail" placeholder="email@gmail.com" style="width: 100%; padding: 8px 12px; border: 1px solid #dadce0; border-radius: 6px; font-size: 13px; outline: none;" autocomplete="off">
+        <div class="custom-form-actions" style="display: flex; gap: 8px; justify-content: flex-end;">
+          <button type="button" class="btn-custom-cancel" id="btnCustomCancel" style="padding: 6px 12px; font-size: 12px; font-weight: 600; border: none; background: #f1f3f4; border-radius: 4px; cursor: pointer; color: #3c4043;">Cancel</button>
+          <button type="button" class="btn-custom-submit" id="btnCustomSubmit" style="padding: 6px 12px; font-size: 12px; font-weight: 600; border: none; background: #1a73e8; color: #ffffff; border-radius: 4px; cursor: pointer;">Connect</button>
+        </div>
+      </div>
+
+      <!-- Terms/Footer -->
+      <div class="google-popup-footer" style="padding: 16px 20px; font-size: 10px; color: #5f6368; line-height: 1.4; background: #f8f9fa;">
+        <span>To continue, Google will share your name, email address, profile picture, and personal preferences with the HabitFire-AI dashboard application.</span>
+      </div>
+    </div>
   </div>
 
   <script src="app.js" type="module"></script>

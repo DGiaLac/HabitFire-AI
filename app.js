@@ -217,7 +217,8 @@ class HabitFireApp {
       settings: {
         userName: "Achiever",
         reminderEnabled: true,
-        reminderTime: "08:30" // HH:MM
+        reminderTime: "08:30", // HH:MM
+        googleUser: null       // Saved Google Account profile information
       },
       stats: {
         currentStreak: 0,
@@ -246,6 +247,10 @@ class HabitFireApp {
     this.startMockClock();
     this.startNotificationDaemon();
     
+    // Google Auth Session Initializer
+    this.sessionGuestMode = false;
+    this.checkGoogleAuthStatus();
+
     // Initial Render
     this.historySelectedDateStr = this.getTodayDateString();
     this.renderAll();
@@ -353,6 +358,32 @@ class HabitFireApp {
     this.btnTestNotification = document.getElementById("btnTestNotification");
     this.btnTimeTravel = document.getElementById("btnTimeTravel");
     this.btnResetData = document.getElementById("btnResetData");
+    this.btnExportData = document.getElementById("btnExportData");
+    this.btnImportData = document.getElementById("btnImportData");
+    this.importFileSelector = document.getElementById("importFileSelector");
+
+    // Google Authentication DOM elements
+    this.welcomeModal = document.getElementById("welcomeModal");
+    this.btnWelcomeGoogleLogin = document.getElementById("btnWelcomeGoogleLogin");
+    this.btnWelcomeGuest = document.getElementById("btnWelcomeGuest");
+    this.googlePopupModal = document.getElementById("googlePopupModal");
+    this.googleAccountsList = document.getElementById("googleAccountsList");
+    this.googleCustomAccountForm = document.getElementById("googleCustomAccountForm");
+    this.googleCustomName = document.getElementById("googleCustomName");
+    this.googleCustomEmail = document.getElementById("googleCustomEmail");
+    this.btnCustomCancel = document.getElementById("btnCustomCancel");
+    this.btnCustomSubmit = document.getElementById("btnCustomSubmit");
+    this.settingsGoogleGroup = document.getElementById("settingsGoogleGroup");
+    this.settingsSignedOutView = document.getElementById("settingsSignedOutView");
+    this.settingsSignedInView = document.getElementById("settingsSignedInView");
+    this.btnSettingsGoogleLogin = document.getElementById("btnSettingsGoogleLogin");
+    this.settingsProfilePic = document.getElementById("settingsProfilePic");
+    this.settingsProfileName = document.getElementById("settingsProfileName");
+    this.settingsProfileEmail = document.getElementById("settingsProfileEmail");
+    this.btnGoogleSignOut = document.getElementById("btnGoogleSignOut");
+    this.headerProfileAvatar = document.getElementById("headerProfileAvatar");
+    this.headerProfilePic = document.getElementById("headerProfilePic");
+    this.headerBrandEmoji = document.getElementById("headerBrandEmoji");
   }
 
   // --- Bind UI Event Handlers ---
@@ -408,6 +439,18 @@ class HabitFireApp {
         this.resetAllData();
       }
     });
+
+    this.btnExportData.addEventListener("click", () => this.exportStateData());
+    this.btnImportData.addEventListener("click", () => this.importFileSelector.click());
+    this.importFileSelector.addEventListener("change", (e) => this.handleImportFile(e));
+
+    // Google Sign-In Event Bindings
+    this.btnWelcomeGoogleLogin.addEventListener("click", () => this.openGoogleSignInSelector());
+    this.btnWelcomeGuest.addEventListener("click", () => this.continueAsGuest());
+    this.btnSettingsGoogleLogin.addEventListener("click", () => this.openGoogleSignInSelector());
+    this.btnGoogleSignOut.addEventListener("click", () => this.signOutGoogle());
+    this.btnCustomCancel.addEventListener("click", () => this.closeCustomAccountForm());
+    this.btnCustomSubmit.addEventListener("click", () => this.submitCustomAccount());
 
     // Keyboard dismissal on mobile inputs
     this.taskInput.addEventListener("keydown", (e) => {
@@ -775,6 +818,7 @@ class HabitFireApp {
 
   // --- Render All Pipelines ---
   renderAll() {
+    this.renderGoogleProfileUI();
     this.renderHeaderStreak();
     
     if (this.activeScreen === "screen-today") {
@@ -919,6 +963,26 @@ class HabitFireApp {
       this.todayProgressLabel.textContent = "Making good progress!";
     } else {
       this.todayProgressLabel.textContent = "Taking the first steps!";
+    }
+
+    // Update horizontal Speed Track & Car Position
+    const speedTrackFill = document.getElementById("speedTrackFill");
+    const speedTrackCar = document.getElementById("speedTrackCar");
+    const speedometerLabel = document.getElementById("speedometerLabel");
+
+    if (speedTrackFill && speedTrackCar) {
+      speedTrackFill.style.width = `${percent}%`;
+      speedTrackCar.style.left = `${percent}%`;
+      
+      // Update automotive speed label
+      if (total === 0) {
+        speedometerLabel.textContent = "PARKED";
+      } else if (percent === 100) {
+        speedometerLabel.textContent = "LIMITLESS (240 km/h) 🏁";
+      } else {
+        const speed = Math.round(percent * 2.4);
+        speedometerLabel.textContent = `CRUISING (${speed} km/h)`;
+      }
     }
   }
 
@@ -1194,6 +1258,48 @@ class HabitFireApp {
     alert("Application data fully cleared! Welcome to HabitFire 🔥");
   }
 
+  // --- Export/Import Backup Utilities ---
+  exportStateData() {
+    try {
+      const dataStr = JSON.stringify(this.state, null, 2);
+      const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+      
+      const exportFileDefaultName = `habitfire_backup_${this.getTodayDateString()}.json`;
+      
+      const linkElement = document.createElement('a');
+      linkElement.setAttribute('href', dataUri);
+      linkElement.setAttribute('download', exportFileDefaultName);
+      linkElement.click();
+    } catch (e) {
+      alert("Failed to export backup data. Please try again.");
+    }
+  }
+
+  handleImportFile(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const parsed = JSON.parse(e.target.result);
+        if (parsed.tasks && parsed.settings && parsed.stats) {
+          this.state = parsed;
+          this.saveStateToStorage();
+          this.switchScreen("screen-today");
+          this.renderAll();
+          alert("Progress successfully restored! Welcome back 🏎️");
+        } else {
+          alert("Invalid backup file format. Could not restore progress.");
+        }
+      } catch (err) {
+        alert("Failed to read backup file. Make sure it is a valid JSON file.");
+      }
+    };
+    reader.readAsText(file);
+    event.target.value = "";
+  }
+
   // --- Utility: Safe Escape HTML string ---
   escapeHTML(str) {
     return str.replace(/[&<>'"]/g, 
@@ -1205,6 +1311,158 @@ class HabitFireApp {
         '"': '&quot;'
       }[tag] || tag)
     );
+  }
+
+  // --- Google Authentication Integration ---
+  checkGoogleAuthStatus() {
+    const user = this.state.settings.googleUser;
+    if (user) {
+      this.welcomeModal.style.opacity = "0";
+      this.welcomeModal.style.pointerEvents = "none";
+      setTimeout(() => {
+        this.welcomeModal.style.display = "none";
+      }, 500);
+    } else {
+      if (this.sessionGuestMode) {
+        this.welcomeModal.style.display = "none";
+      } else {
+        this.welcomeModal.style.display = "flex";
+        this.welcomeModal.style.opacity = "1";
+        this.welcomeModal.style.pointerEvents = "all";
+      }
+    }
+  }
+
+  openGoogleSignInSelector() {
+    this.googlePopupModal.style.display = "flex";
+    
+    this.googleAccountsList.innerHTML = `
+      <button class="google-account-btn" style="display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px 20px; border: none; background: transparent; cursor: pointer; text-align: left; transition: background 0.2s;" data-name="DGiaLac" data-email="dgialac@gmail.com">
+        <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--color-primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px;">D</div>
+        <div style="display: flex; flex-direction: column;">
+          <span style="font-size: 13px; font-weight: 700; color: #1c1921;">DGiaLac</span>
+          <span style="font-size: 11px; color: #5f6368;">dgialac@gmail.com</span>
+        </div>
+      </button>
+      <button class="google-account-btn" style="display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px 20px; border: none; background: transparent; cursor: pointer; text-align: left; transition: background 0.2s; border-top: 1px solid #f1f3f4;" data-name="Friend Tester" data-email="tester@gmail.com">
+        <div style="width: 32px; height: 32px; border-radius: 50%; background: #34a853; color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px;">F</div>
+        <div style="display: flex; flex-direction: column;">
+          <span style="font-size: 13px; font-weight: 700; color: #1c1921;">Friend Tester</span>
+          <span style="font-size: 11px; color: #5f6368;">tester@gmail.com</span>
+        </div>
+      </button>
+      <button id="btnConnectCustomGoogle" style="display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px 20px; border: none; background: transparent; cursor: pointer; text-align: left; transition: background 0.2s; border-top: 1px solid #f1f3f4; color: #1a73e8; font-weight: 600; font-size: 13px;">
+        <svg viewBox="0 0 24 24" style="width: 16px; height: 16px; color: #1a73e8; margin-right: 4px;"><path fill="currentColor" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+        Connect Another Account
+      </button>
+    `;
+
+    this.googleAccountsList.querySelectorAll(".google-account-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const name = btn.getAttribute("data-name");
+        const email = btn.getAttribute("data-email");
+        this.selectGoogleAccount({ name, email });
+      });
+      btn.addEventListener("mouseover", () => btn.style.background = "#f8f9fa");
+      btn.addEventListener("mouseout", () => btn.style.background = "transparent");
+    });
+
+    const btnConnectCustomGoogle = document.getElementById("btnConnectCustomGoogle");
+    btnConnectCustomGoogle.addEventListener("click", () => {
+      this.googleAccountsList.style.display = "none";
+      this.googleCustomAccountForm.style.display = "flex";
+    });
+    btnConnectCustomGoogle.addEventListener("mouseover", () => btnConnectCustomGoogle.style.background = "#f8f9fa");
+    btnConnectCustomGoogle.addEventListener("mouseout", () => btnConnectCustomGoogle.style.background = "transparent");
+  }
+
+  closeCustomAccountForm() {
+    this.googleCustomAccountForm.style.display = "none";
+    this.googleAccountsList.style.display = "flex";
+    this.googleCustomName.value = "";
+    this.googleCustomEmail.value = "";
+  }
+
+  submitCustomAccount() {
+    const name = this.googleCustomName.value.trim();
+    const email = this.googleCustomEmail.value.trim();
+    if (!name || !email) {
+      alert("Please fill in your name and email address.");
+      return;
+    }
+    if (!email.includes("@")) {
+      alert("Please enter a valid Google email address.");
+      return;
+    }
+    this.selectGoogleAccount({ name, email });
+  }
+
+  selectGoogleAccount(account) {
+    const picUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(account.name)}&background=00f2fe&color=ffffff&bold=true&size=128`;
+    
+    this.state.settings.googleUser = {
+      name: account.name,
+      email: account.email,
+      picture: picUrl
+    };
+    this.state.settings.userName = account.name.split(" ")[0];
+
+    this.saveStateToStorage();
+    
+    this.googlePopupModal.style.display = "none";
+    this.googleCustomAccountForm.style.display = "none";
+    this.googleAccountsList.style.display = "flex";
+    this.googleCustomName.value = "";
+    this.googleCustomEmail.value = "";
+
+    this.checkGoogleAuthStatus();
+    this.renderAll();
+
+    alert(`🔐 Google Account Connected: Welcome, ${account.name}!`);
+  }
+
+  continueAsGuest() {
+    this.sessionGuestMode = true;
+    this.checkGoogleAuthStatus();
+    this.renderAll();
+  }
+
+  signOutGoogle() {
+    if (confirm("Are you sure you want to sign out of your Google Account?")) {
+      this.state.settings.googleUser = null;
+      this.state.settings.userName = "Achiever";
+      this.sessionGuestMode = false;
+      this.saveStateToStorage();
+      
+      this.checkGoogleAuthStatus();
+      this.renderAll();
+    }
+  }
+
+  renderGoogleProfileUI() {
+    const user = this.state.settings.googleUser;
+    
+    if (user) {
+      this.headerProfileAvatar.style.display = "block";
+      this.headerProfilePic.src = user.picture;
+      this.headerBrandEmoji.style.display = "none";
+
+      this.settingsSignedOutView.style.display = "none";
+      this.settingsSignedInView.style.display = "flex";
+      this.settingsProfilePic.src = user.picture;
+      this.settingsProfileName.textContent = user.name;
+      this.settingsProfileEmail.textContent = user.email;
+      
+      if (this.settingsUserName) {
+        this.settingsUserName.value = user.name;
+      }
+    } else {
+      this.headerProfileAvatar.style.display = "none";
+      this.headerBrandEmoji.style.display = "block";
+
+      this.settingsSignedOutView.style.display = "flex";
+      this.settingsSignedInView.style.display = "none";
+    }
   }
 }
 
