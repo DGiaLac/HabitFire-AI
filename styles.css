@@ -317,6 +317,8 @@ body {
   flex-direction: column;
   height: 100%;
   width: 100%;
+  overflow: hidden;
+  min-height: 0;
 }
 
 /* App Header */
@@ -380,6 +382,7 @@ body {
   position: relative;
   overflow: hidden;
   background: var(--color-bg);
+  min-height: 0;
 }
 
 /* Individual Pages/Screens */
@@ -1208,12 +1211,15 @@ input:checked + .slider:before {
    ========================================================================== */
 .bottom-nav {
   height: 64px;
+  min-height: 64px;
+  flex-shrink: 0;
   background: var(--color-surface-base);
   border-top: var(--border-glass);
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   z-index: 990;
   padding-bottom: 4px; /* Space for phone gesture pill */
+  backdrop-filter: blur(12px);
 }
 
 .nav-item {
@@ -1300,10 +1306,14 @@ input:checked + .slider:before {
   
   .phone-frame {
     width: 100vw;
-    height: 100vh;
+    height: 100dvh; /* dvh accounts for dynamic viewport on mobile browsers */
     border: none;
     border-radius: 0;
     box-shadow: none;
+  }
+
+  .phone-screen {
+    padding-top: 0; /* No fake camera notch on real mobile */
   }
   
   .phone-camera-notch,
@@ -1324,6 +1334,7 @@ input:checked + .slider:before {
   
   .bottom-nav {
     padding-bottom: env(safe-area-inset-bottom, 12px);
+    min-height: calc(64px + env(safe-area-inset-bottom, 12px));
     height: calc(64px + env(safe-area-inset-bottom, 12px));
   }
 }
