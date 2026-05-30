@@ -257,29 +257,91 @@ class HabitFireApp {
   }
 
   // --- Load / Save Local Storage ---
+  // --- Load / Save Local Storage (Multi-Account Partitioned Storage) ---
   loadStateFromStorage() {
-    const stored = localStorage.getItem("habitfire_state");
+    // 1. Check if there's a logged-in user session saved globally
+    const sessionUser = localStorage.getItem("habitfire_active_session");
+    let activeEmail = "default";
+    let googleUserObj = null;
+
+    if (sessionUser) {
+      try {
+        googleUserObj = JSON.parse(sessionUser);
+        activeEmail = googleUserObj.email;
+      } catch(e) {}
+    }
+
+    // 2. Load the state database for this specific user email
+    const storageKey = `habitfire_state_${activeEmail}`;
+    let stored = localStorage.getItem(storageKey);
+
+    // Migration Check: If logging in as DGiaLac for the first time, migrate old legacy data
+    if (activeEmail === "dgialac@gmail.com" && !stored) {
+      const legacyData = localStorage.getItem("habitfire_state");
+      if (legacyData) {
+        localStorage.setItem(storageKey, legacyData);
+        stored = legacyData;
+        console.log("Migrated legacy state to dgialac@gmail.com account successfully.");
+      }
+    }
+
     if (stored) {
       try {
         const parsed = JSON.parse(stored);
-        if (parsed.tasks) this.state.tasks = parsed.tasks;
-        if (parsed.settings) this.state.settings = { ...this.state.settings, ...parsed.settings };
-        if (parsed.stats) this.state.stats = { ...this.state.stats, ...parsed.stats };
-        if (parsed.lastNotificationSentDate) this.state.lastNotificationSentDate = parsed.lastNotificationSentDate;
+        this.state.tasks = parsed.tasks || {};
+        this.state.settings = parsed.settings || {
+          userName: "Achiever",
+          reminderEnabled: true,
+          reminderTime: "08:30",
+          googleUser: googleUserObj
+        };
+        // Ensure googleUser stays aligned with the session context
+        this.state.settings.googleUser = googleUserObj;
+        
+        this.state.stats = parsed.stats || { currentStreak: 0, longestStreak: 0 };
+        this.state.timeTravelOffsetDays = parsed.timeTravelOffsetDays || 0;
+        this.state.lastNotificationSentDate = parsed.lastNotificationSentDate || null;
       } catch (e) {
-        console.error("Failed to parse LocalStorage state, resetting to defaults", e);
+        console.error("Failed to parse local state database:", e);
       }
+    } else {
+      // Initialize a fresh clean database for this user
+      this.state.tasks = {};
+      this.state.settings = {
+        userName: googleUserObj ? googleUserObj.name.split(" ")[0] : "Achiever",
+        reminderEnabled: true,
+        reminderTime: "08:30",
+        googleUser: googleUserObj
+      };
+      this.state.stats = {
+        currentStreak: 0,
+        longestStreak: 0
+      };
+      this.state.timeTravelOffsetDays = 0;
+      this.state.lastNotificationSentDate = null;
     }
   }
 
   saveStateToStorage() {
+    const activeEmail = this.state.settings.googleUser ? this.state.settings.googleUser.email : "default";
+    
+    // Save session info globally
+    if (this.state.settings.googleUser) {
+      localStorage.setItem("habitfire_active_session", JSON.stringify(this.state.settings.googleUser));
+    } else {
+      localStorage.removeItem("habitfire_active_session");
+    }
+
+    // Save actual user data
     const dataToSave = {
       tasks: this.state.tasks,
       settings: this.state.settings,
       stats: this.state.stats,
+      timeTravelOffsetDays: this.state.timeTravelOffsetDays,
       lastNotificationSentDate: this.state.lastNotificationSentDate
     };
-    localStorage.setItem("habitfire_state", JSON.stringify(dataToSave));
+    
+    localStorage.setItem(`habitfire_state_${activeEmail}`, JSON.stringify(dataToSave));
   }
 
   // --- Browser Native Notifications ---
@@ -1400,15 +1462,19 @@ class HabitFireApp {
   selectGoogleAccount(account) {
     const picUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(account.name)}&background=00f2fe&color=ffffff&bold=true&size=128`;
     
-    this.state.settings.googleUser = {
+    const googleUser = {
       name: account.name,
       email: account.email,
       picture: picUrl
     };
-    this.state.settings.userName = account.name.split(" ")[0];
-
-    this.saveStateToStorage();
     
+    // Save new active session globally
+    localStorage.setItem("habitfire_active_session", JSON.stringify(googleUser));
+
+    // Load account-specific partitioned database
+    this.loadStateFromStorage();
+    
+    // Close modals
     this.googlePopupModal.style.display = "none";
     this.googleCustomAccountForm.style.display = "none";
     this.googleAccountsList.style.display = "flex";
@@ -1416,6 +1482,9 @@ class HabitFireApp {
     this.googleCustomEmail.value = "";
 
     this.checkGoogleAuthStatus();
+    
+    // Go to default screen
+    this.switchScreen("screen-today");
     this.renderAll();
 
     alert(`🔐 Google Account Connected: Welcome, ${account.name}!`);
@@ -1429,12 +1498,15 @@ class HabitFireApp {
 
   signOutGoogle() {
     if (confirm("Are you sure you want to sign out of your Google Account?")) {
-      this.state.settings.googleUser = null;
-      this.state.settings.userName = "Achiever";
+      // Clear global session
+      localStorage.removeItem("habitfire_active_session");
       this.sessionGuestMode = false;
-      this.saveStateToStorage();
+      
+      // Reload state (which will load/initialize default/guest database)
+      this.loadStateFromStorage();
       
       this.checkGoogleAuthStatus();
+      this.switchScreen("screen-today");
       this.renderAll();
     }
   }
